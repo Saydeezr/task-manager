@@ -33,10 +33,10 @@ function createTaskCard(task) {
 
 // Todo: create a function to render the task list and make cards draggable
  function renderTaskList(){ 
-//   for (let i = 0; i < eachTask.length; i++) {
-//     const task = eachTask[i];
-//     console.log('task', task)
- // }
+  for (let i = 0; i < taskList.length; i++) {
+     const givenTask = taskList[i];
+     console.log('givenTask', givenTask)
+ }
  };
 
 
