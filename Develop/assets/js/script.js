@@ -75,7 +75,13 @@ function handleAddTask(event){
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
+    const taskIndex = newTask.findIndex(task => task.id === taskId);
 
+    if (taskIndex !== -1) {
+        newTask.splice(taskIndex, 1);
+    } else {
+        console.log('Task not found');
+    }
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
