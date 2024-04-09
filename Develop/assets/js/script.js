@@ -1,9 +1,9 @@
 // Retrieve tasks and nextId from localStorage
-let taskList = JSON.parse(localStorage.getItem("tasks"));
+let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 const newTask = []
 
-document.getElementById("formModal").addEventListener('submit', handleAddTask);
+document.getElementById("addTask").addEventListener('click', handleAddTask);
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
@@ -35,16 +35,16 @@ function createTaskCard(task) {
 
 // Todo: create a function to render the task list and make cards draggable
  function renderTaskList(){ 
-    const taskBoard = $('#task-board');
+    const taskBoard = $('.task-board');
     taskBoard.empty();
-   
-    if (taskList) {
-        taskList.forEach (task => {
+    if (taskList) { 
+        taskList.forEach (task => { 
     const taskCard = createTaskCard(task);
     taskCard.draggable({
         revert: "invalid",
         cursor: "move"
-    });
+    }); 
+    console.log(taskCard)
     taskBoard.append(taskCard);
  });
 }};
@@ -52,7 +52,7 @@ function createTaskCard(task) {
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
    event.preventDefault();
-
+  console.log('handle click')
    const title = $('#title').val();
     const date = $('#date').val();
     const description = $('#description').val();
@@ -68,9 +68,13 @@ function handleAddTask(event){
     date : date,
     description : description,
    status: "to-do",
-  };
-  newTask.push(task); 
+  }; 
   taskList.push(task);
+  const jsonTask = JSON.stringify(taskList);
+  localStorage.setItem('tasks', jsonTask);
+  newTask.push(task); 
+ 
+  renderTaskList();
 };
 
 // Todo: create a function to handle deleting a task
@@ -86,7 +90,8 @@ function handleDeleteTask(id){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    let droppedTask = ui.draggable;
+    let taskCard = ui.draggable;
+    return taskCard
 
 
 }
