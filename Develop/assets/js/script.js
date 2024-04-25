@@ -19,15 +19,13 @@ function generateTaskId() {
    
 // Todo: create a function to create a task card
 function createTaskCard(task) {
-     const cardDiv = $('<div>')
-     .addClass("card w-75 my-3")
-     .attr("data-task-id", task.id);
+     const cardDiv = $('<div>').addClass("card w-75 my-3").attr("data-task-id", task.id);
 
      const cardHeader =$('<div>').addClass('card-header').text(task.title);
      const cardBody = $("<div>").addClass("card-body");
      const description = $('<p>').addClass('card-text').text(task.description);
      const deadline = $('<p>').addClass('card-text').text('Deadline: ' + task.date);
- 
+     const deleteButton = $('<button>').addClass('btn btn-danger').text('Delete')
      cardBody.append(description, deadline);
      cardDiv.append(cardHeader, cardBody);
      return cardDiv;
