@@ -25,12 +25,23 @@ function createTaskCard(task) {
      const cardBody = $("<div>").addClass("card-body");
      const description = $('<p>').addClass('card-text').text(task.description);
      const deadline = $('<p>').addClass('card-text').text('Deadline: ' + task.date);
-     const deleteButton = $('<button>').addClass('btn btn-danger').text('Delete')
-     cardBody.append(description, deadline);
+     const deleteButton = $('<button>').addClass('btn btn-danger').text('Delete');
+     deleteButton.click(handleDeleteTask)
+     cardBody.append(description, deadline, deleteButton);
      cardDiv.append(cardHeader, cardBody);
-     return cardDiv;
-    };
 
+     if(task.deadline && task.status !== 'done'){
+        let taskDeadline = dayjs(task.date, 'YYYY-MM-DD');
+        let currentDay = dayjs();
+
+    if (task.deadline.isSame(currentDay, 'day')) {
+        cardBody.addClass('bg-warning text-white')
+    } else if (taskDeadline.isAfter(currentDay, 'day')){
+        cardBody.addClass('bg-light text-dark')
+    } else {
+        cardBody.addClass('bg-danger text-white')
+    }}  return cardDiv
+};
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
@@ -44,7 +55,20 @@ function renderTaskList() {
             taskCard.draggable({
                 revert: "invalid",
                 cursor: "move"
-            });
+            }); 
+            
+            if (task.status === "to-do") {
+                $("#todo-cards").append(taskCard);
+            } else if (task.status === "in-progress") {
+                $("#in-progress-cards").append(taskCard);
+            } else if (task.status === "done") {
+                $("#done-cards").append(taskCard);
+            }
+
+            $('.draggable').draggable({
+                opacity: 0.5,
+                zIndex: 100
+            })
             console.log(taskCard);
             taskBoard.append(taskCard);
         }
@@ -69,7 +93,7 @@ function handleAddTask(event){
     title : title,
     date : date,
     description : description,
-   status: "to-do",
+    status: "to-do",
   }; 
   taskList.push(task);
   const jsonTask = JSON.stringify(taskList);
@@ -92,9 +116,9 @@ function handleDeleteTask(id){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    let taskCard = ui.draggable;
-    let newStatusLane = $(this);
-    newStatusLane.append(taskCard);
+//     let taskCard = ui.draggable;
+//     let newStatusLane = $(this);
+//     newStatusLane.append(taskCard);
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
