@@ -19,7 +19,7 @@ function generateTaskId() {
    
 // Todo: create a function to create a task card
 function createTaskCard(task) {
-     const cardDiv = $('<div>').addClass("card w-75 my-3").attr("data-task-id", task.id);
+     const cardDiv = $('<div>').addClass("card draggable w-75 my-3").attr("data-task-id", task.id);
 
      const cardHeader =$('<div>').addClass('card-header').text(task.title);
      const cardBody = $("<div>").addClass("card-body");
@@ -31,7 +31,7 @@ function createTaskCard(task) {
      cardDiv.append(cardHeader, cardBody);
 
      if(task.deadline && task.status !== 'done'){
-        let taskDeadline = dayjs(task.date, 'YYYY-MM-DD');
+        let taskDeadline = dayjs(task.deadline, 'YYYY-MM-DD');
         let currentDay = dayjs();
 
     if (task.deadline.isSame(currentDay, 'day')) {
@@ -52,10 +52,6 @@ function renderTaskList() {
         for (let i = 0; i < taskList.length; i++) {
             const task = taskList[i];
             const taskCard = createTaskCard(task);
-            taskCard.draggable({
-                revert: "invalid",
-                cursor: "move"
-            }); 
             
             if (task.status === "to-do") {
                 $("#todo-cards").append(taskCard);
@@ -66,7 +62,6 @@ function renderTaskList() {
             }
 
             $('.draggable').draggable({
-                opacity: 0.5,
                 zIndex: 100
             })
             console.log(taskCard);
@@ -116,6 +111,13 @@ function handleDeleteTask(id){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
+    const id = ui.helper.attr('id');
+    const lane = $(event.target).attr('id')
+
+    const task = taskList.find(task => task.id === parseInt(taskId));
+    task.status = laneId;
+
+    
 //     let taskCard = ui.draggable;
 //     let newStatusLane = $(this);
 //     newStatusLane.append(taskCard);
