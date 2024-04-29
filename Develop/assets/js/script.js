@@ -1,8 +1,8 @@
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
 let nextId = JSON.parse(localStorage.getItem("nextId"));
-const droppableLane = document.getElementById('.droppable-area')
-const newTask = []
+const droppableLane = document.querySelector('.droppable-area')
+
 
 document.getElementById("addTask").addEventListener('click', handleAddTask);
 
@@ -20,7 +20,6 @@ function generateTaskId() {
 // Todo: create a function to create a task card
 function createTaskCard(task) {
      const cardDiv = $('<div>').addClass("card draggable w-75 my-3").attr("data-task-id", task.id);
-
      const cardHeader =$('<div>').addClass('card-header').text(task.title);
      const cardBody = $("<div>").addClass("card-body");
      const description = $('<p>').addClass('card-text').text(task.description);
@@ -30,7 +29,7 @@ function createTaskCard(task) {
      cardBody.append(description, deadline, deleteButton);
      cardDiv.append(cardHeader, cardBody);
 
-     if(task.deadline && task.status !== 'done'){
+    if(task.deadline && task.status !== 'done'){
         let taskDeadline = dayjs(task.deadline, 'YYYY-MM-DD');
         let currentDay = dayjs();
 
@@ -63,8 +62,7 @@ function renderTaskList() {
 
             $('.draggable').draggable({
                 zIndex: 100
-            })
-            console.log(taskCard);
+            });
             taskBoard.append(taskCard);
         }
     }
@@ -90,10 +88,11 @@ function handleAddTask(event){
     description : description,
     status: "to-do",
   }; 
+
   taskList.push(task);
   const jsonTask = JSON.stringify(taskList);
   localStorage.setItem('tasks', jsonTask);
-  newTask.push(task); 
+
  
   renderTaskList();
 };
@@ -111,16 +110,15 @@ function handleDeleteTask(id){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    const id = ui.helper.attr('id');
+    const taskId = ui.helper.attr('id');
     const lane = $(event.target).attr('id')
 
     const task = taskList.find(task => task.id === parseInt(taskId));
-    task.status = laneId;
-
-    
-//     let taskCard = ui.draggable;
-//     let newStatusLane = $(this);
-//     newStatusLane.append(taskCard);
+    if (task){
+      task.status = lane;
+    } else {
+        console.log(`Task #${taskId} not found`)
+    };   
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
