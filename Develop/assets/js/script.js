@@ -2,7 +2,7 @@
 let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 const droppableLane = document.querySelector('.droppable-area')
-
+console.log(taskList)
 
 document.getElementById("addTask").addEventListener('click', handleAddTask);
 
@@ -44,8 +44,7 @@ function createTaskCard(task) {
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
-    const taskBoard = $('.task-board');
-    taskBoard.empty();
+    
 
     if (taskList) {
         for (let i = 0; i < taskList.length; i++) {
@@ -63,7 +62,7 @@ function renderTaskList() {
             $('.draggable').draggable({
                 zIndex: 100
             });
-            taskBoard.append(taskCard);
+            // taskBoard.append(taskCard);
         }
     }
 }
@@ -110,12 +109,17 @@ function handleDeleteTask(id){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    const taskId = ui.helper.attr('id');
+    const taskId = ui.helper[0].attributes[1].value;
     const lane = $(event.target).attr('id')
-
-    const task = taskList.find(task => task.id === parseInt(taskId));
+    console.log(taskId);
+    console.log(lane);
+    const task = taskList.find(task => task.id === taskId);
     if (task){
       task.status = lane;
+      //update in local storage 
+      localStorage.setItem('taskList', JSON.stringify(taskList));
+      // call the renderTaskList function
+      renderTaskList();
     } else {
         console.log(`Task #${taskId} not found`)
     };   
